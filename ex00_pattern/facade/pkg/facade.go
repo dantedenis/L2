@@ -6,17 +6,21 @@ import (
 
 type Application struct {
 	user IUser
-	db DB
+	db   DB
 }
 
-func NewApplication() *Application{
+// NewApplication Суть таковая, что имея несколько сервисов мы объединяем их в один монолит и работает с помощью него
+func NewApplication() *Application {
 	return &Application{
 		user: *NewDefaultUser("TestUser", "TestPass"),
-		db: *NewPostgresConnection("TestParammeters"),
+		db:   *NewPostgresConnection("TestParameters"),
 	}
 }
 
 func (app *Application) Run() {
-	app.db.Authentification(app.user)
+	err := app.db.Authentification(app.user)
+	if err != nil {
+		return
+	}
 	fmt.Println("Application is run")
 }

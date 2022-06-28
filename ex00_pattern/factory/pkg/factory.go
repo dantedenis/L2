@@ -17,6 +17,7 @@ type person struct {
 	salary   int
 }
 
+// Проверка, что персон имплементирует интерфейс
 var _ IPerson = &person{}
 
 func (p *person) GetName() string {
@@ -43,6 +44,7 @@ type ProgrammerGo struct {
 	person
 }
 
+// GetPerson порождающий объекты метод, центр самого паттерна
 func GetPerson(worker string) (IPerson, error) {
 	switch strings.ToLower(worker) {
 	case "director":

@@ -40,5 +40,7 @@ func (c *cut) Run() (err error) {
 		fmt.Println(str)
 	}
 
+	// TODO: Need main functional
+
 	return nil
 }

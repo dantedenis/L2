@@ -1,5 +1,6 @@
 package ex04_anagramm
 
+// переопределяем слайс рун, что бы имплементировать интерфейс сорт
 type sliceRune []rune
 
 func (b sliceRune) Len() int {

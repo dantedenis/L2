@@ -21,8 +21,10 @@ func ParseFlags() *flags {
 	flag.BoolVar(&f.s, "s", false, "with delim")
 
 	flag.Parse()
+	// если аргументов пришел файл
 	f.input = flag.Arg(0)
 
+	// если в флагах к нам прилетел список колонок, парсим и переводим в число
 	if f.f != "" {
 		f.targetRow = parseColumn(f.f)
 	}
@@ -30,10 +32,7 @@ func ParseFlags() *flags {
 	return &f
 }
 
-func (f flags) String() string {
-	return fmt.Sprintf("Flags: \n -f: %s\n -d: %s\n -s: %t\n -input:%s\n -range:%v", f.f, f.d, f.s, f.input, f.targetRow)
-}
-
+// переводим список колонок в виде символов в слайс интов
 func parseColumn(str string) []int {
 	rows := strings.Split(str, ",")
 	result := make([]int, 0, len(rows))
@@ -45,6 +44,7 @@ func parseColumn(str string) []int {
 			num1, _ := strconv.Atoi(pair[0])
 			num2, _ := strconv.Atoi(pair[1])
 			fmt.Println(num1, num2)
+			// если задан промежуток от n до k добавляем каждое значение в этом промежутке в слайс
 			for num1 <= num2 {
 				result = append(result, num1)
 				num1++
@@ -55,6 +55,7 @@ func parseColumn(str string) []int {
 		}
 	}
 
+	// сортируем список колонок, что бы выводить их упорядоченно
 	sort.Ints(result)
 	return result
 }

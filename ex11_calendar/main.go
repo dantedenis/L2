@@ -3,7 +3,6 @@ package main
 import (
 	"ex11_calendar/web/server"
 	"flag"
-	"fmt"
 	"log"
 )
 
@@ -13,5 +12,8 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(serv)
+	err = serv.Run()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

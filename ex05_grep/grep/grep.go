@@ -37,7 +37,10 @@ func (g *grep) makePair(line string) pair {
 	var res pair
 
 	res.line = line
-	res.mark = strings.Contains(line, g.rule.pattern)
+	res.mark = !strings.Contains(line, g.rule.pattern)
+	if !g.rule.fix {
+		res.mark = !res.mark
+	}
 
 	return res
 }

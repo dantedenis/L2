@@ -18,11 +18,13 @@ func main() {
 	fmt.Println("Get host:")
 
 	var host string
+	// считывает хоста с инпута
 	_, err := fmt.Scan(&host)
 	if err != nil {
 		os.Exit(ErrorScan)
 	}
 
+	// и отправляем хоста в бибилотеку для коннекта с сервером и запроса времени
 	time, err := ntp.Time(host)
 	if err != nil {
 		_, err := fmt.Fprintf(os.Stderr, err.Error())
@@ -31,7 +33,7 @@ func main() {
 		}
 		os.Exit(ErrorQuery)
 	}
-
+	// проверяем на ошибки, если все ок печатаем результат
 	_, err = fmt.Println(time)
 	if err != nil {
 		os.Exit(ErrorPrintln)

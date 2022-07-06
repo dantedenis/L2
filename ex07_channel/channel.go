@@ -30,13 +30,16 @@ func mergeRoutine(channels ...<-chan interface{}) <-chan interface{} {
 
 // Решение с помощью рекурсии
 func mergeRecursive(channels ...<-chan interface{}) <-chan interface{} {
+	// ограничиваем рекусрию, разбиваем все каналы по парам, для мержа 2канала->1канал
 	switch len(channels) {
+	// завершаем тут рекусрию, если каналов не осталось вощвращаем закрытый
 	case 0:
 		c := make(chan interface{})
 		close(c)
 		return c
 	case 1:
 		return channels[0]
+	// делим каналы по половине рекурсивно и в конечном итоге мержим попарно, при возврате вверх по рекусрии
 	default:
 		m := len(channels) / 2
 		return mergeTwo(mergeRecursive(channels[:m]...),
@@ -44,19 +47,25 @@ func mergeRecursive(channels ...<-chan interface{}) <-chan interface{} {
 	}
 }
 
+// Мержим 2 канала в 1
 func mergeTwo(a, b <-chan interface{}) <-chan interface{} {
 	c := make(chan interface{})
 
+	// запускаем рутину
 	go func() {
+		// не забываем по завершению закрыть канал
 		defer close(c)
+		// чекаем значение канала, тк будем его изменять
 		for a != nil || b != nil {
 			select {
+			// необходимо проерять на возможность чтения из канала, если не ок, то меняем значение канала
 			case v, ok := <-a:
 				if !ok {
 					a = nil
 					continue
 				}
 				c <- v
+			// аналогично, считываем и если не ок - меняем
 			case v, ok := <-b:
 				if !ok {
 					b = nil
@@ -66,5 +75,6 @@ func mergeTwo(a, b <-chan interface{}) <-chan interface{} {
 			}
 		}
 	}()
+	// возвращаем смерженный канал
 	return c
 }
